@@ -111,7 +111,7 @@ def show_help():
   print('      kt2reader 10 > capture.txt')
   print('Data fields:')
   print('      time   relative time in seconds')
-  print('    frame#   relative time in seconds')
+  print('    frame#   sequential frame number')
   print('      size   size of buffer, should be 646')
   print('      sync   sync pattern 0x5a a5 5a a5')
   print('      row#   row number, 0 to 79')

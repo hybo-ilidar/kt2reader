@@ -21,8 +21,9 @@ We used the Zadig method described in the instructions with success.
 
 These python libraries should be installed
 
-pip install pyserial pyftdi
-
+```bash
+$ pip install pyserial pyftdi
+```
 
 ## Program 
 
@@ -54,7 +55,7 @@ Output:
       kt2reader 10 > capture.txt
 Data fields:
       time   relative time in seconds
-    frame#   relative time in seconds
+    frame#   sequential frame number
       size   size of buffer, should be 646
       sync   sync pattern 0x5a a5 5a a5
       row#   row number, 0 to 79
