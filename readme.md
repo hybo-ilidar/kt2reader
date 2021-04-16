@@ -67,3 +67,25 @@ $ python kt2reader.py 4 > capture.txt
 
 
 
+## Notes 16 Feb 2021
+
+#### About image drawing
+
+Method using opencv-python is shown in program `kt2reader_rev1.py` 
+I am not too familiar with opencv in Python. But I had already been
+experimenting with using matplotlib to draw images (just from an 
+[online example I found](https://stackoverflow.com/questions/17835302/how-to-update-matplotlibs-imshow-window-interactively).
+
+Take a look at this version using matplotlib: `kt2reader_rev2.py`
+It might be working, I can't tell 100% because of some network
+connection issues.
+
+Also I am testing making a generator `get_frame()` function which yields
+between frames. Not sure if this would help or not. 
+Not 100% ready yet, but shows the concept: `kt2reader_generator.py`
+
+Note: Using Python 3.7.5 on this Windows computer for testing.
+Other versions could be installed if needed to match a different setup.
+
+
+

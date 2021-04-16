@@ -213,6 +213,8 @@ def main(argv):
     print(q[1], end='\t') # frame number
     packet.parse(q[2]) # data
     packet.print()
+    #print( 'min:', min( packet.image ) )
+    #print( 'max:', max( packet.image ) )
 
   ser.close()
 
