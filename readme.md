@@ -87,5 +87,12 @@ Not 100% ready yet, but shows the concept: `kt2reader_generator.py`
 Note: Using Python 3.7.5 on this Windows computer for testing.
 Other versions could be installed if needed to match a different setup.
 
+#### Screen capture examples:
+
+Made with `kt2reader_rev2.py`
+
+![Background](images/image-background.png)
+![Hand Waving](images/image-hand-waving.png)
+
 
 
