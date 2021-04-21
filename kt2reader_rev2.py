@@ -163,7 +163,9 @@ def main(argv):
     # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:14:e/1', 12000000, timeout=0.001)
     # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
     # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1:5/1', 12000000, timeout=0.001)
-    ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1/1', 12000000, timeout=0.001)
+
+    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1/1', 12000000, timeout=0.001)
+    ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
 
     ser.bytesize = serial.EIGHTBITS  # number of bits per bytes
     ser.parity = serial.PARITY_NONE  # set parity check: no parity
@@ -206,9 +208,11 @@ def main(argv):
             buff += ser.read(642)  # rownum byte, type byte, 320 shorts
             if buff[4] == 0: row0 = True
             if row0:
-                queue.append([(time.time() - t0), nframe, buff])
+                #queue.append([(time.time() - t0), nframe, buff])
                 row_idx, data = packet.parse_2(buff)
                 if len(data) == 320:
+                  # print('buff[4]:', buff[4])
+
                   if row_idx < 80:
                     depth_img_array[row_idx, :] = data
                   nrow += 1
@@ -228,7 +232,7 @@ def main(argv):
                 #matrix = np.random.randint(0, 100, size=(IMAGE_SIZE, IMAGE_SIZE), dtype=np.uint8)
                 axim1.set_data(depth_img_array)
                 fig1.canvas.flush_events()
-                print('drawn')
+                #print('drawn')
 
         if nframe >= nframes: break
 
