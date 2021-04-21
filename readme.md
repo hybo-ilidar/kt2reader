@@ -106,7 +106,7 @@ The captured data file can be viewed in an editor or plotted using
 
 ![Captured Timing, beginning time](images/capture-frame-beg-1188.png)
 ![Captured Timing, enging time](images/capture-frame-end-1718.png)
-![Captured Timing, next frame time](images/capture-frame-next-2723.png)
+![Captured Timing, next frame time](images/capture-frame-next-2373.png)
 
 We see about 6 lines of data being read almost simultaneously
 This suggests the buffer size of the UART... let's check it:
@@ -147,9 +147,13 @@ Was able to match the timing of the real sensor reasonably well.
 This gives a portable and known pattern to be used for serlial link testing.
 
 ![Scope Capture, Line Header Details](images/scope-line-header.png)
+
 ![Scope Capture, One Line Time](images/scope-one-line-time-536us.png)
+
 ![Scope Capture, Line to Line Time](images/scope-line-to-line-806us.png)
-![Scope Capture, One Frame Time](images/scope-one-frame-time-65ms.png)
+
+![Scope Capture, One Frame Time](images/scope-one-frame-65ms.png)
+
 ![Scope Capture, Frame to Frame Time](images/scope-frame-to-frame-131ms.png)
 
 
