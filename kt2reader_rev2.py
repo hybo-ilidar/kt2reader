@@ -7,6 +7,8 @@ import struct
 import serial
 import pyftdi.serialext
 from pyftdi.ftdi import Ftdi
+import platform
+import io
 
 
 class Syncher:
@@ -135,6 +137,7 @@ def show_help():
 
 
 def main(argv):
+    ftdifilename = 'ftdi-port-'+platform.node()+'.txt'
     nframes = 100
     if len(argv) > 1:
         if argv[1] == 'help':
@@ -142,31 +145,50 @@ def main(argv):
             exit(0)
 
         if argv[1] == 'list':
-            Ftdi.show_devices()
-            exit(0)
+          ostr = io.StringIO()
+          Ftdi.show_devices(None, ostr)
+          with open( ftdifilename, 'w' ) as fp:
+            print(ostr.getvalue().strip(), file=fp)
+          print(ostr.getvalue().strip())
+          print('saved to', ftdifilename)
+          exit(0)
 
         if argv[1].isdigit():
             nframes = int(argv[1])
 
-    # Example of usual serial ports
-    # ser = serial.Serial ('/dev/tty.wchusbserial141230', 3000000 )
-    # ser = serial.Serial ('/dev/tty.usbserial-A100RXY3', 1000000 )
-    # ser = serial.Serial ('/dev/tty.usbserial-DN01O1MN', 3000000 )
-    # ser = serial.Serial ('/dev/cu.usbserial-14720', 115200)
-    # ser = serial.Serial ('/dev/ttyS18', 6000000 )
-    # ser = serial.Serial ('COM5', 3000000 )
-    # ser = serial.Serial ('COM8', 921600 )
-    # ser = serial.Serial ('COM18', 7000000 )
+    portname = ''
+    portdesc = ''
+    with open(ftdifilename, 'r') as ftdi:
+      for line in ftdi:
+        fields = line.strip().split(None,1)
+        if fields[0].startswith('ftdi:'):
+          portname = fields[0]
+          portdesc = fields[1]
+          break;
 
-    # Special URL Scheme for FTDI high speed comms
-    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:14:1c/1', 12000000)
-    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:14:e/1', 12000000, timeout=0.001)
-    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
-    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1:5/1', 12000000, timeout=0.001)
+    if len(portname) == 0:
+      # Example of usual serial ports
+      # ser = serial.Serial ('/dev/tty.wchusbserial141230', 3000000 )
+      # ser = serial.Serial ('/dev/tty.usbserial-A100RXY3', 1000000 )
+      # ser = serial.Serial ('/dev/tty.usbserial-DN01O1MN', 3000000 )
+      # ser = serial.Serial ('/dev/cu.usbserial-14720', 115200)
+      # ser = serial.Serial ('/dev/ttyS18', 6000000 )
+      # ser = serial.Serial ('COM5', 3000000 )
+      # ser = serial.Serial ('COM8', 921600 )
+      # ser = serial.Serial ('COM18', 7000000 )
+      # Special URL Scheme for FTDI high speed comms
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:14:1c/1', 12000000)
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:14:e/1', 12000000, timeout=0.001)
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1:5/1', 12000000, timeout=0.001)
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1/1', 12000000, timeout=0.001)
+      # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
+      portname = 'ftdi://ftdi:232h:0:1/1'
+      portdesc = 'default'
 
-    # ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:1/1', 12000000, timeout=0.001)
-    ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232h:0:1/1', 12000000, timeout=0.001)
 
+    print('Port:', portname, portdesc)
+    ser = pyftdi.serialext.serial_for_url(portname, 12000000, timeout=0.001)
     ser.bytesize = serial.EIGHTBITS  # number of bits per bytes
     ser.parity = serial.PARITY_NONE  # set parity check: no parity
     ser.stopbits = serial.STOPBITS_ONE  # number of stop bits
@@ -211,8 +233,7 @@ def main(argv):
                 #queue.append([(time.time() - t0), nframe, buff])
                 row_idx, data = packet.parse_2(buff)
                 if len(data) == 320:
-                  # print('buff[4]:', buff[4])
-
+                  #print('buff[4]:', buff[4])
                   if row_idx < 80:
                     depth_img_array[row_idx, :] = data
                   nrow += 1
@@ -230,6 +251,7 @@ def main(argv):
                 #cv2.waitKey(1)
 
                 #matrix = np.random.randint(0, 100, size=(IMAGE_SIZE, IMAGE_SIZE), dtype=np.uint8)
+                print('drawn')
                 axim1.set_data(depth_img_array)
                 fig1.canvas.flush_events()
                 #print('drawn')
@@ -247,8 +269,8 @@ def main(argv):
     # print('freq:', rate)
 
     for q in queue:
-        # print('{:.6f}'.format(q[0]), end='\t')  # time
-        # print(q[1], end='\t')  # frame number
+        print('{:.6f}'.format(q[0]), end='\t')  # time
+        print(q[1], end='\t')  # frame number
         packet.parse(q[2])  # data
         packet.print()
 

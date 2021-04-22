@@ -156,6 +156,49 @@ This gives a portable and known pattern to be used for serlial link testing.
 
 ![Scope Capture, Frame to Frame Time](images/scope-frame-to-frame-131ms.png)
 
+## Notes 22 Apr 2021: More Refactoring for Time
+
+Transfered development onto Ubuntu 20.04 machine.
+Implemented reading from the serial port in a separate Python thread.
+Cleaned up some of the code to make it more efficient.
+Results are promising. 
+Will continue working on some tweaks to the circular buffer reading
+parameters. 
+On Ubuntu and Windows machine, the time consumed by the plotting routine
+can be quite signicifant. 
+
+Here are some statistics (in seconds) for time spend parsing (once per line)
+and time spend drawing the plot (once per frame). Parsing time looks
+okay.
+
+```
+Tparse,  mean: 0.000022
+Tparse, stdev: 0.000144
+Tparse,   max: 0.000000
+Tparse,   min: 0.001047
+
+T.plot,  mean: 0.038009
+T.plot, stdev: 0.013087
+T.plot,   max: 0.023807
+T.plot,   min: 0.133878
+Threaded ringbuf reader has ended
+```
+
+The plotting average time of 38 msec could be an issue...
+we're trying to receive on the order of one video line per millisecond
+This success of this depends on how Python implements multitasking.
+The time to plot can peak at over 130 milliseconds, which is an entire
+video frame (plus gap between frames) in this existing demo hardware.
+
+Try `kt2reader_rev6.py` to see this result
+
+Added reading of FTDI serial port URL from a text file.
+When you use the `list` option to see the connected FTDI urls, 
+it saves it in a text file having the hostname of your computer.
+When starting the program, it reads the first one it finds in that file.
+(If there are multiple such FTDI ports on your computer, delete the ones
+you don't want from the file).
+
 
 
 

@@ -1,4 +1,3 @@
-venv-w10
-venv-mac
-venv-linux
+venv*
 **/.DS_Store
+sync.ply
