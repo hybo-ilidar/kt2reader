@@ -13,23 +13,6 @@ import threading
 import statistics as stats
 
 
-class Syncher:
-  def __init__(self):
-    self.reset()
-
-  def reset(self):
-    self.synched = False
-    self.pattern = [0x5a, 0xa5, 0x5a, 0xa5]
-    self.pattern4 = b'\x5a\xa5\x5a\xa5'
-    # self.pattern4 = b'\xa5\x5a\xa5\x5a'
-
-  def search4(self, sync):
-    if len(sync) == 4:
-      if sync == self.pattern4:
-        self.synched = True
-        return True, self.pattern4
-    return False, b''
-
 
 class Packet:
   def __init__(self):
@@ -193,6 +176,24 @@ class Ftdi_serial:
   def ringbuf_swallow(self, num):
     #self.logging.append( [ 'S', num, len(self.ringbuf), self.ringbuf[:num] ] )
     self.ringbuf = self.ringbuf[num:]
+
+
+class Syncher:
+  def __init__(self):
+    self.reset()
+
+  def reset(self):
+    self.synched = False
+    self.pattern = [0x5a, 0xa5, 0x5a, 0xa5]
+    self.pattern4 = b'\x5a\xa5\x5a\xa5'
+    # self.pattern4 = b'\xa5\x5a\xa5\x5a'
+
+  def search4(self, sync):
+    if len(sync) == 4:
+      if sync == self.pattern4:
+        self.synched = True
+        return True, self.pattern4
+    return False, b''
 
 
 def main(argv):
