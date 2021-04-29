@@ -67,7 +67,7 @@ class Ftdi_serial:
     self.buff = bytearray(b'')
     self.bsize = 1000
     self.bthresh = 100
-    self.b2read = 1000
+    self.b2read = 1024
     self.logging = []
 
     self.ringbuf = bytearray(b'')
@@ -94,19 +94,22 @@ class Ftdi_serial:
   def close(self):
     self.ser.close()
 
-  def read(self, num, numpop=None):
-    debugging = []
-    if numpop == None: numpop = num
-    debugging.extend(['E', num, numpop, len(self.buff)])
-    if len(self.buff) < self.bthresh or len(self.buff) < num:
-      while len(self.buff) < self.bsize:
-        self.buff += self.ser.read(self.b2read)
-        debugging.extend( [ 'R', len(self.buff) ] )
-    buff_return = self.buff[0:num]
-    self.buff = self.buff[numpop:]
-    debugging.extend( [ 'X', num, len(self.buff), buff_return[0:8] ] )
-    self.logging.append(debugging)
-    return buff_return
+  def read(self, num=None, numpop=None):
+    if num is None: # just do raw read
+      return self.ser.read(self.b2read)
+    else: # read the requested number of bytes
+      #debugging = []
+      if numpop == None: numpop = num
+      #debugging.extend(['E', num, numpop, len(self.buff)])
+      if len(self.buff) < self.bthresh or len(self.buff) < num:
+        while len(self.buff) < self.bsize:
+          self.buff += self.ser.read(self.b2read)
+          #debugging.extend( [ 'R', len(self.buff) ] )
+      buff_return = self.buff[0:num]
+      self.buff = self.buff[numpop:]
+      #debugging.extend( [ 'X', num, len(self.buff), buff_return[0:8] ] )
+      #self.logging.append(debugging)
+      return buff_return
 
   def swallow(self, num):
     self.buff = self.buff[num:]
