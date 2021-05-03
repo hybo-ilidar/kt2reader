@@ -201,9 +201,69 @@ you don't want from the file).
 
 
 
+## Notes 26 April Week, Socket server/client approach
 
+Did some more testing, implemented the serial receiver as a completely
+separate process, communicating with the main processing program over a
+TCP socket. This code is in `kt2server.py` and `kt2client.py`. In this
+first attempt, I was doing the packet synchronization in the server
+portion (the code which also was reading the sensor). This approach did
+not seem to perform any better than earlier ones.
 
+Next, I moved the packet syncing code to the client, so the server did
+as little processing as possible. This is found in `kt2server_rev2.py` 
+and `kt2client_rev2.py`. In this case, also, the performance was not
+much better.
 
+## Notes 3 May 2021
 
+Decided to look at the timing of just displaying the data -- forget
+entirely about reading data from the sensor. I made a minimal playback
+loop that displayed images which were already prepared and stored in
+memory. This code is found in `kt2player.py`.
 
+The results of this show that (on my machine) we sometimes see single
+frame plots taking well over 140 ms. Here are the results of
+a run I made, drawing images 1000 times and calculating the statistics
+of the time it took to plot each image. I made two sets of numbers,
+because of the wild point at over 140 msec. The second set of statistics
+is with clipping the data at 100 milliseconds.
+
+#### Statistics of Display Drawing Times (milliseconds)
+
+```
+T.plot,   num: 1000
+T.plot,  mean: 21.052827
+T.plot, stdev: 4.223990
+T.plot,   min: 19.234180
+T.plot,   max: 148.691654
+```
+
+```
+T.clip,   num: 999
+T.clip,  mean: 20.925060
+T.clip, stdev: 1.232604
+T.clip,   min: 19.234180
+T.clip,   max: 42.851686
+```
+
+After looking at this data more, I realized there was only one data
+point clipped, and that was the first one. I assume that either or both
+of these functions must perform extra setup code the first time they are called.
+
+```python
+  axim1.set_data(depth_img_array)
+  fig1.canvas.flush_events()
+```
+
+#### Machine Details
+
+Maybe your project will be running on much faster hardware than I am
+using? For reference, summary of my Ubuntu machine is as follows:
+
+* Intel NUC8i3BEH
+* Intel(R) Core(TM) i3-8109U CPU @ 3.00GHz
+* Iris Plus Graphics 655
+* 8GiB RAM
+* 256GB NVMe SSD
 
