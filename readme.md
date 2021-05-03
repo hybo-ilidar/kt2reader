@@ -256,10 +256,9 @@ of these functions must perform extra setup code the first time they are called.
   fig1.canvas.flush_events()
 ```
 
-![Histogram non-clipped data](images/histogram-display-times-clipped.png)
+![Histogram clipped data](images/histogram-display-times-clipped.png)
 
-
-![Histogram clipped data](images/histogram-display-times-msec.png)
+![Histogram non-clipped data](images/histogram-display-times-msec.png)
 
 #### Machine Details
 
