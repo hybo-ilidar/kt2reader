@@ -291,8 +291,8 @@ T.plot,  mean: 23.812152
 T.plot, stdev: 5.864954
 T.plot,   min: 16.918898
 T.plot,   max: 92.752218
-T.clip,   num: 1000
 
+T.clip,   num: 1000
 T.clip,  mean: 23.812152
 T.clip, stdev: 5.864954
 T.clip,   min: 16.918898
@@ -301,6 +301,27 @@ T.clip,   max: 92.752218
 ![Win10 Sacheon Histogram clipped data](images/win10-4000-histogram-clipped.png)
 
 ![Win10 Sacheon Histogram non-clipped data](images/win10-4000-histogram.png)
+
+NOTE: This test was performed using RDP. 
+Performed another test direct-connecting to the monitor (no RDP)
+Results are almost the same, except we see that first-time plot penalty
+again.
+
+```
+T.plot,   num: 1000
+T.plot,  mean: 26.072989
+T.plot, stdev: 5.239061
+T.plot,   min: 21.940470
+T.plot,   max: 135.807753
+
+T.clip,   num: 999
+T.clip,  mean: 25.963145
+T.clip, stdev: 3.923944
+T.clip,   min: 21.940470
+T.clip,   max: 61.832428
+```
+
+![Win10 Sacheon Histogram, direct connect](images/win10-4000-histogram-direct-connect-monitor.png)
 
 #### Chris's Win10 Computer Pohang
 
