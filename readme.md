@@ -271,3 +271,11 @@ using? For reference, summary of my Ubuntu machine is as follows:
 * 8GiB RAM
 * 256GB NVMe SSD
 
+#### Mr. Kim's Jetson Display Time Details
+
+![Jetson Display Time Stats](images/jetson-display-stats.png)
+
+![Jetson Histogram clipped data](images/jetson-histogram-clipped.png)
+
+![Jetson Histogram non-clipped data](images/jetson-histogram.png)
+
