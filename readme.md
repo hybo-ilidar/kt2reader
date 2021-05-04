@@ -301,3 +301,17 @@ T.clip,   max: 92.752218
 ![Win10 Sacheon Histogram clipped data](images/win10-4000-histogram-clipped.png)
 
 ![Win10 Sacheon Histogram non-clipped data](images/win10-4000-histogram.png)
+
+#### Chris's Win10 Computer Pohang
+
+Same as Sacheon Windows machine, no penalty first time drawing.
+No need to show the clipping stats and histogram.
+
+```
+T.plot,   num: 1000
+T.plot,  mean: 16.641048
+T.plot, stdev: 2.099951
+T.plot,   min: 15.003204
+T.plot,   max: 79.016685
+```
+![Win10 Pohang Histogram](images/win10-c505-histogram.png)
