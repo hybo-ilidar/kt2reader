@@ -279,3 +279,25 @@ using? For reference, summary of my Ubuntu machine is as follows:
 
 ![Jetson Histogram non-clipped data](images/jetson-histogram.png)
 
+
+#### Chris's Win10 Computer Sacheon
+
+Note: looks like the first-time drawing penalty doesn't exist on 
+Windows?
+
+```
+T.plot,   num: 1000
+T.plot,  mean: 23.812152
+T.plot, stdev: 5.864954
+T.plot,   min: 16.918898
+T.plot,   max: 92.752218
+T.clip,   num: 1000
+
+T.clip,  mean: 23.812152
+T.clip, stdev: 5.864954
+T.clip,   min: 16.918898
+T.clip,   max: 92.752218
+```
+![Win10 Sacheon Histogram clipped data](images/win10-4000-histogram-clipped.png)
+
+![Win10 Sacheon Histogram non-clipped data](images/win10-4000-histogram.png)
