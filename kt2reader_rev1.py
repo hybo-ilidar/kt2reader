@@ -203,10 +203,11 @@ def main(argv):
             if buff[4] == 0: row0 = True
             if row0:
                 #queue.append([(time.time() - t0), nframe, buff])
-                [row_idx, data] = packet.parse_2(buff)
-                if row_idx < 80:
-                    depth_img_array[row_idx, :] = data
-                nrow += 1
+                if len(buff) == 646:
+                    [row_idx, data] = packet.parse_2(buff)
+                    if row_idx < 80:
+                        depth_img_array[row_idx, :] = data
+                    nrow += 1
                 if buff[4] >= 79: row79 = True
                 if nrow >= 80: row79 = True
             if row79:
