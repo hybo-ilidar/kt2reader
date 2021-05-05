@@ -104,8 +104,8 @@ def main(argv):
 
     t0 = time.time()
     queue = []
-    row0 = False
-    row79 = False
+    rowbeg = False
+    rowend = False
 
     if plot_data:
       plt.ion()
@@ -116,6 +116,7 @@ def main(argv):
 
     buff = bytearray(b'')
 
+    maxrows = 40
     while True:
 
       if syncher.synched:
@@ -130,23 +131,23 @@ def main(argv):
 
         if packet.check_sync(buff):
           #print('true', buff[4])
-          if buff[4] == 0: row0 = True
-          if row0:
+          if buff[4] == 0: rowbeg = True
+          if rowbeg:
             #queue.append([(time.time() - t0), nframe, buff])
             packet.parse(buff)
             data = packet.image
             if len(data) == 320:
               #print('buff[4]:', buff[4])
-              if buff[4] < 80:
-                depth_img_array[buff[4], :] = data
               nrow += 1
-              if buff[4] >= 79: row79 = True
-              if nrow >= 80: row79 = True
-          if row79:
+              if buff[4] < maxrows:
+                depth_img_array[buff[4], :] = data
+              if buff[4] >= maxrows-1: rowend = True
+              if nrow >= maxrows: rowend = True
+          if rowend:
             nframe += 1
             nrow = 0
-            row0 = False
-            row79 = False
+            rowbeg = False
+            rowend = False
 
             if plot_data:
               #depth_img_array = depth_img_array / 12000.

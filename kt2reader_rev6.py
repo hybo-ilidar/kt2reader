@@ -254,11 +254,12 @@ def main(argv):
   nrow = 0
   t0 = time.time()
   queue = []
-  row0 = False
-  row79 = False
+  rowbeg = False
+  rowend = False
 
+  maxrows = 40
   if plot_data:
-    depth_img_array = np.zeros((80, 320), dtype=np.int16)
+    depth_img_array = np.zeros((maxrows, 320), dtype=np.int16)
     depth_img_array[0, 0] = 3000 # this value allow imshow to initialise it's color scale
     plt.ion()
     fig1, ax1 = plt.subplots()
@@ -283,21 +284,21 @@ def main(argv):
       if len(buff) == 0:
         buff = port.ringbuf_read(646)
       if packet.check_sync(buff):
-        if buff[4] == 0: row0 = True
-        if row0:
-          if buff[4] >= 79: row79 = True
+        if buff[4] == 0: rowbeg = True
+        if rowbeg:
+          if buff[4] >= maxrows-1: rowend = True
           if capture_data:
             queue.append([(time.time() - t0), nframe, buff])
           if plot_data:
             start=time.time()
             data = packet.parse_2(buff)
             if len(data) == 320:
-              if buff[4] < 79:
+              if buff[4] < maxrows:
                 depth_img_array[buff[4], :] = data
             times_parse.extend( [time.time()-start] )
-        if row79:
-          row0 = False
-          row79 = False
+        if rowend:
+          rowbeg = False
+          rowend = False
           nframe += 1
           if plot_data:
             start=time.time()
