@@ -13,21 +13,33 @@ import statistics as stats
 class Packet:
   def __init__(self):
     self.int_sync_pattern = int.from_bytes( b'\x5a\xa5\x5a\xa5', byteorder='big')
-    self.max_size = 646
+    self.pack_maxrows = 40
+    self.pack_size = 646
     self.pack_sync = '<BBBB'
-    self.pack_rownum = '<B'
+    self.pack_row = '<B'
     self.pack_type = '<B'
     self.pack_image = '<320h'
-    self.pack_packet = '<' + self.pack_sync[1:] + self.pack_rownum[1:] \
+    self.pack_packet = '<' + self.pack_sync[1:] + self.pack_row[1:] \
         + self.pack_type[1:] + self.pack_image[1:]
     self.size_image = struct.calcsize(self.pack_image)
     self.size_packet = struct.calcsize(self.pack_packet)
+    self.reset_data()
+    self.reset_checks()
 
+  def reset_data(self):
+    self.size = None
     self.sync = None
-    self.rownum = None
+    self.row = None
     self.type = None
     self.depth = None
     self.gray = None
+
+  def reset_checks(self):
+    self.valid_sync = False
+    self.valid_size = False
+    self.valid_row = False
+    self.valid_type = False
+    self.valid = False
 
   def check_sync(self, buff):
     sync=0
@@ -35,25 +47,42 @@ class Packet:
       sync = int.from_bytes(buff[0:4], byteorder='big')
       #print( hex(sync), hex(self.int_sync_pattern) )
       #print( sync == self.int_sync_pattern )
-    return sync == self.int_sync_pattern
+    self.valid_sync =  sync == self.int_sync_pattern
+    return self.valid_sync
+
+  def check(self, buff):
+    self.reset_checks()
+    # sync first
+    self.check_sync(buff)
+    if not self.valid_sync: return self.valid
+    # check size next
+    self.valid_size = self.size == self.pack_size
+    if self.size >= 6: # require 6 bytes to check other parameters 
+      self.valid_row = self.row >= 0 and self.row < self.pack_maxrows
+      self.valid_type = self.type == 0 or self.type == 1
+    self.valid = self.valid_sync and self.valid_size \
+                 and self.valid_row and self.valid_type 
+    return self.valid
 
   def parse(self, buff):
+    self.reset_data()
     self.size = len(buff)
-    if len(buff) == self.max_size:
+    if self.size >= 6:
       self.sync = int.from_bytes(buff[0:4], byteorder='big')
-      self.rownum = int.from_bytes(buff[4:5], byteorder='little')
+      self.row = int.from_bytes(buff[4:5], byteorder='little')
       self.type = int.from_bytes(buff[5:6], byteorder='little')
       self.image = list(struct.unpack(self.pack_image, buff[6:]))
     else:
       self.sync = 0
-      self.rownum = 0
+      self.row = 0
       self.type = 0
       self.image = []
+    return self.check(buff)
 
   def print(self):
     print(self.size, end='\t')
     print(hex(self.sync), end='\t')
-    print(self.rownum, end='\t')
+    print(self.row, end='\t')
     print(self.type, end='\t')
     print(len(self.image), end='\t')
     for val in self.image:

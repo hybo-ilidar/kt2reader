@@ -336,3 +336,19 @@ T.plot,   min: 15.003204
 T.plot,   max: 79.016685
 ```
 ![Win10 Pohang Histogram](images/win10-c505-histogram.png)
+
+## Notes 4 & 5 May 2021 (INCOMPLETE)
+
+* comport file issue (need to clean up the project paths I think)
+* saw one time the issue where the comport is "jammed"
+* TkAgg
+* ufw allow on Ubuntu 
+https://askubuntu.com/questions/1273347/
+
+* server on Win10
+* Tested clients (all appear good):
+  - Win10 (same machine)
+  - Ubuntu (different machine same local net)
+  - Mac (different machine same local net)
+
+
