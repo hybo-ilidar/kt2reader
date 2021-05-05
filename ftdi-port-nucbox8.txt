@@ -1,2 +1,2 @@
 Available interfaces:
-  ftdi://ftdi:232h:1:6/1   (Single RS232-HS)
+  ftdi://ftdi:232h:1:25/1   (Single RS232-HS)
