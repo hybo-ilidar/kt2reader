@@ -348,6 +348,7 @@ https://askubuntu.com/questions/1273347/
 * server on Win10
 * Tested clients (all appear good):
   - Win10 (same machine)
+  - Win10 allow broadcast UDP
   - Ubuntu (different machine same local net)
   - Mac (different machine same local net)
 

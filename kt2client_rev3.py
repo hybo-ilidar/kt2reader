@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import socket
 import numpy as np
@@ -61,6 +61,11 @@ def main(argv):
     depth_img_array[0, 0] = 3000 # this value allow imshow to initialise it's color scale
     plt.ion()
     fig1, ax1 = plt.subplots()
+    ax1.text(0.98, 0.06, f'{0:05d}',
+        bbox={'facecolor': 'white', 'alpha': 1.0, 'pad': 2},
+        verticalalignment='center', horizontalalignment='right',
+        transform=ax1.transAxes,
+        color='black', fontsize=8)
     axim1 = ax1.imshow(depth_img_array)
     fig1.canvas.flush_events()
 
@@ -93,10 +98,16 @@ def main(argv):
           nframe += 1
           if plot_data:
             axim1.set_data(depth_img_array)
+            if nframe % 100 == 0: 
+              print('frame#', nframe)
+              ax1.text(0.98, 0.06, f'{nframe:05d}',
+                  bbox={'facecolor': 'white', 'alpha': 1.0, 'pad': 2},
+                  verticalalignment='center', horizontalalignment='right',
+                  transform=ax1.transAxes,
+                  color='black', fontsize=8)
             fig1.canvas.flush_events()
-            print('frame#', nframe)
           else:
-            print('frame#', nframe)
+            if nframe % 100 == 0: print('frame#', nframe)
         
     if handler.is_dead():
       print('stopping')
