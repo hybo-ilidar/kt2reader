@@ -82,6 +82,7 @@ def main(argv):
   rowend = False
   maxrows = 40
   gulping = True
+  modulo_display = 100
   while gulping:
 
     buff, addr = udp.get_datagram(646)
@@ -96,18 +97,22 @@ def main(argv):
           rowbeg = False
           rowend = False
           nframe += 1
-          if plot_data:
-            axim1.set_data(depth_img_array)
-            if nframe % 100 == 0: 
-              print('frame#', nframe)
+          if nframe % 100 == 0:
+            t = time.time()
+            dt = t - t0
+            t0 = t
+            fps = float(modulo_display) / dt
+            print(f'frame: {nframe} dt: {dt:.3f} fps: {fps:.1f}' )
+            if plot_data:
               ax1.text(0.98, 0.06, f'{nframe:05d}',
                   bbox={'facecolor': 'white', 'alpha': 1.0, 'pad': 2},
                   verticalalignment='center', horizontalalignment='right',
                   transform=ax1.transAxes,
                   color='black', fontsize=8)
+          if plot_data:
+            axim1.set_data(depth_img_array)
             fig1.canvas.flush_events()
-          else:
-            if nframe % 100 == 0: print('frame#', nframe)
+
         
     if handler.is_dead():
       print('stopping')
